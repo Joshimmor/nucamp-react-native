@@ -25,7 +25,7 @@ class CampsiteInfo extends Component{
     constructor(props){
         super(props)
         this.state = {
-            campsite: CAMPSITES
+            campsites: CAMPSITES
         };
     }
     static navigationOptions = {

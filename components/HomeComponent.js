@@ -1,4 +1,4 @@
-import react, {Component} from "react";
+import React, {Component} from "react";
 import {View, Text, ScrollView} from "react-native";
 import {Card} from "react-native-elements";
 import {CAMPSITES} from "../shared/campsites";
@@ -28,10 +28,10 @@ class Home extends Component{
        this.state = {
         campsites: CAMPSITES,
         promotions: PROMOTIONS,
-        partner: PARTNERS,
+        partners: PARTNERS,
        };
    } 
-        static navigationOptions ={
+        static navigationOptions = {
              title: "Home"
         }
         

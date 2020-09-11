@@ -1,9 +1,10 @@
 import React ,{Component} from 'react';
 import Directory from  "./DirectoryComponent";
 import CampsiteInfo from "./Campsiteinfo";
+import Home from "./HomeComponent";
 import {createStackNavigator, createDrawerNavigator} from "react-navigation"
 import {View, Platform} from "react-native";
-import {HomeComponent} from "./HomeComponent";
+
 
 //navigation
 const DirectoryNavigator = createStackNavigator(
@@ -24,11 +25,10 @@ const DirectoryNavigator = createStackNavigator(
         }
     }
 );
-        //stackNav
+        //HOME NAVIGATOR
         const HomeNavigator = createStackNavigator(
             {
-                Home: { screen: Home },
-                
+                Home: {screen:Home}      
             }, 
             {
                 navigationOptions: {
@@ -47,7 +47,7 @@ const DirectoryNavigator = createStackNavigator(
 
         const MainNavigator = createDrawerNavigator (
             {
-                Home:{screeen: HomeNavigator},
+                Home:{screen: HomeNavigator},
                 Directory: {screen: DirectoryNavigator}
             },
             {
