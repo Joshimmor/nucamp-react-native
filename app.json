@@ -21,6 +21,13 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "sdkVersion": "35.0.0",
+    "platforms": [
+      "android",
+      "ios"
+    ],
+    "description": "Bootcamp React Native Project ",
+    "githubUrl": "https://github.com/Joshimmor/nucamp-react-native"
   }
 }
