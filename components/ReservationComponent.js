@@ -7,8 +7,12 @@ import {
      Picker, 
      Switch, 
      Button,
-     Modal} from "react-native";
+     Modal,
+     Animated, Alert } from "react-native";
 import DatePicker from 'react-native-datepicker';
+import * as Animatable from 'react-native-animatable';
+import * as Permissions from 'expo-permissions';
+import { Notifications } from 'expo';
 
 class Reservation extends Component {
 
@@ -19,7 +23,6 @@ class Reservation extends Component {
             campers: 1,
             hikeIn: false,
             date: '',
-            showModal: false
         };
     }
 
@@ -27,27 +30,65 @@ class Reservation extends Component {
         title: 'Reserve Campsite'
     }
     //toggle Modal
-    toggleModal(){
-        this.setState({showModal: !this.state.showModal})
-    }
+    
     //submit form
-    handleReservation() {
-        console.log(JSON.stringify(this.state));
-        this.toggleModal();
-    }
+   handleReservation(){
+        Alert.alert(
+            "Begin Search?",
+            'Number of Campers :' + this.state.campers + '\n' + 'Date :' + this.state.date + '\n' + 'Hike In :' + this.state.hikeIn  ,
+            [
+                { 
+                    text: 'Cancel', 
+                    onPress: () => console.log( 'Not Deleted'),
+                    style: 'cancel'
+                },
+                {
+                    text: 'OK',
+                    onPress: () => {
+                        this.presentLocalNotification(this.state.date);
+                        this.resetForm();
+                    }
+                }
+            ],
+            { cancelable: false }
+        )
+        this.resetForm()
+    }  
     //resetform
     resetForm(){
         this.setState({
             campers: 1,
             hikeIn: false,
             date: '',
-            showModal: false
         })
     }
-    //
-    render() {
+    //notification permissions
+    async obtainNotificationPermission(){
+        const permission = await Permissions.getAsync(Permissions.USER_FACING_NOTIFICATIONS);
+        if(permission.status !== 'granted'){
+            const permission = await Permissions.askAsync(Permissions.USER_FACING_NOTIFICATIONS);
+            if(permission.status !== 'granted'){
+                 Alert.alert('Permission not granted to show notifications')
+            }
+            return permission;
+        }
+        return permission;
+    }
+
+    async presentLocalNotification(date){
+        const permission = await this.obtainNotificationPermission();
+        if(permission.status === 'granted'){
+                Notifications.presentLocalNotificationAsync({
+                    title: 'Your Campsite Reservation Search',
+                    body: 'Search for  ' + date + 'requested'
+                });
+        }
+    }
+    
+    
+    render(){
         return (
-            <ScrollView>
+            <Animatable.View animation='zoomIn' duration={2000} delay={1000}>
                 <View style={styles.formRow}>
                     <Text style={styles.formLabel}>Number of Campers</Text>
                     <Picker
@@ -104,26 +145,8 @@ class Reservation extends Component {
                         accessibilityLabel='Tap me to search for available campsites to reserve'
                     />
                 </View>
-                <Modal
-                animationType={'slide'}
-                transparent={false}
-                visible={this.state.showModal}
-                onRequestClose={()=> this.toggleModal}>
-                    <View style={styles.modal}>
-                        <Text style={styles.modalTitle}>Search Campsite Reservations</Text>
-                        <Text style={styles.modalText}>Number of Campers: {this.state.campers}</Text>
-                        <Text style={styles.modalText}>{this.state.hikeIn ? 'Yes' : 'No'}</Text>
-                        <Text style={styles.modalText}>Date: {this.state.date}</Text>
-                        <Button
-                            onPress={()=>{
-                                this.toggleModal();
-                                this.resetForm();
-                            }}
-                            color='#5637DD'
-                            title='Close'/>
-                    </View>
-                </Modal>
-            </ScrollView>
+                
+            </Animatable.View>
         );
     }
 }
